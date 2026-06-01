@@ -35,7 +35,7 @@ git push -u origin main
 powershell -ExecutionPolicy Bypass -File .\scripts\publish-release.ps1
 ```
 
-Sube estos archivos desde `dist\release\` a una GitHub Release con tag `v1.1.0`:
+Sube estos archivos desde `dist\release\` a una GitHub Release con tag `1.1.0`:
 
 - `Malvex-win-x64-portable.zip`
 - `Malvex-Setup-x64.msi`
