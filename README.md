@@ -1,12 +1,72 @@
 # Malvex
 
-Malvex es una herramienta de analisis estatico de malware orientada a archivos PE, triage rapido y soporte visual guiado para analistas.
+Malvex es una herramienta open source de analisis estatico de archivos PE para
+Windows. Esta orientada al triage rapido, la exploracion visual y la asistencia
+guiada: transforma metadatos tecnicos dispersos en una primera lectura
+estructurada que ayuda a decidir que revisar despues.
 
 Creado y mantenido por **Franco Nahuel Corbisiero**.
 
 Malvex es software libre y gratuito bajo [Apache License 2.0](LICENSE). Consulta
 [NOTICE](NOTICE), [SECURITY.md](SECURITY.md), [PRIVACY.md](PRIVACY.md) y
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) antes de redistribuir builds.
+
+## Descargar
+
+La version estable actual es [Malvex 1.1.0](https://github.com/corbisierofranconahuel/Malvex/releases/tag/1.1.0).
+
+- `Malvex-Setup-x64.msi`: instalador para Windows x64.
+- `Malvex-win-x64-portable.zip`: version portable.
+- `SHA256SUMS.txt`: hashes para verificar integridad antes de ejecutar.
+
+## Vista rapida
+
+![Resumen de triage estatico en Malvex](docs/images/screenshots/02-resumen-triage.png)
+
+Malvex concentra la primera etapa del analisis en una interfaz accesible:
+identifica propiedades del PE, resalta senales que merecen investigacion y
+mantiene visible la diferencia entre una evidencia tecnica y una conclusion.
+No intenta reemplazar herramientas especializadas como Ghidra, IDA o x64dbg:
+su objetivo es acelerar y documentar el triage estatico inicial.
+
+## Capturas
+
+<details>
+<summary>Ver recorrido visual completo</summary>
+
+### Inicio adaptable y temas visuales
+
+![Pantalla inicial de Malvex](docs/images/screenshots/01-inicio-clean-light.png)
+
+### Resumen, secciones, imports, heuristicas y YARA
+
+![Resumen de analisis PE](docs/images/screenshots/02-resumen-triage.png)
+
+### Metadatos PE, recursos, TLS, version y PDB
+
+![Metadatos avanzados PE](docs/images/screenshots/03-metadatos-pe.png)
+
+### Desensamblado localizado desde el entrypoint
+
+![Vista de desensamblado](docs/images/screenshots/04-desensamblado-entrypoint.png)
+
+### CFG basico para inspeccionar el flujo inicial
+
+![CFG basico](docs/images/screenshots/05-cfg-basico.png)
+
+### Analista Asistido con acciones priorizadas
+
+![Analista Asistido](docs/images/screenshots/06-analista-asistido.png)
+
+### Vista Hex navegable por RVA
+
+![Vista Hex](docs/images/screenshots/07-vista-hex.png)
+
+### Tutorial integrado
+
+![Tutorial integrado](docs/images/screenshots/08-tutorial-integrado.png)
+
+</details>
 
 ## Alcance de seguridad
 
@@ -58,7 +118,10 @@ Malvex es software libre y gratuito bajo [Apache License 2.0](LICENSE). Consulta
   - Scroll interno por panel para evitar que cadenas o imports largos deformen la vista
 - Creditos integrados en UI y reportes: `Franco Nahuel Corbisiero`
 
-## YARA setup (Windows)
+## YARA setup para ejecutar desde codigo fuente
+
+Los paquetes oficiales ya incluyen YARA para funcionar offline. Si ejecutas
+Malvex directamente desde el codigo fuente:
 
 1. Descarga `yara64.exe` desde el release oficial de YARA.
 2. Copialo en `tools/yara/yara64.exe` o agregalo al `PATH`.
