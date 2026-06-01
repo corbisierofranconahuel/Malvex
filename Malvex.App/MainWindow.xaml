@@ -1,0 +1,870 @@
+﻿<Window x:Class="Malvex.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Malvex | Analisis PE Guiado"
+        Height="900"
+        Width="1460"
+        MinHeight="640"
+        MinWidth="940"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        Icon="Assets/malvex_foto.ico"
+        Background="{DynamicResource AppBackgroundBrush}"
+        Foreground="{DynamicResource TextPrimaryBrush}"
+        FontFamily="Consolas"
+        FontSize="14">
+    <Window.Resources>
+        <SolidColorBrush x:Key="AppBackgroundBrush" Color="#070D1A" />
+        <SolidColorBrush x:Key="PanelBackgroundBrush" Color="#0D1630" />
+        <SolidColorBrush x:Key="SurfaceBackgroundBrush" Color="#0A1226" />
+        <SolidColorBrush x:Key="ControlBackgroundBrush" Color="#101D3B" />
+        <SolidColorBrush x:Key="ControlBorderBrush" Color="#2B3F6A" />
+        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#E9F2FF" />
+        <SolidColorBrush x:Key="TextMutedBrush" Color="#9CB6E0" />
+        <SolidColorBrush x:Key="AccentBrush" Color="#23F2B2" />
+        <SolidColorBrush x:Key="AccentTextBrush" Color="#08111D" />
+        <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#101D3B" />
+        <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="#E9F2FF" />
+        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#2B3F6A" />
+        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#E9F2FF" />
+
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+        </Style>
+
+        <Style TargetType="Border">
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="9,5" />
+            <Setter Property="Margin" Value="6,0,0,0" />
+            <Setter Property="Background" Value="{DynamicResource ControlBackgroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="{DynamicResource ControlBackgroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="6,4" />
+        </Style>
+
+        <Style x:Key="ComboToggleButtonStyle" TargetType="ToggleButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border Background="{DynamicResource ControlBackgroundBrush}"
+                                BorderBrush="{DynamicResource ControlBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="2">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="24" />
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter Grid.Column="0"
+                                                  Margin="6,0,0,0"
+                                                  VerticalAlignment="Center"
+                                                  HorizontalAlignment="Left"
+                                                  RecognizesAccessKey="True" />
+                                <Path Grid.Column="1"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Center"
+                                      Fill="{DynamicResource TextPrimaryBrush}"
+                                      Data="M 0 0 L 4 4 L 8 0 Z" />
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="{DynamicResource ControlBackgroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="4" />
+            <Setter Property="MaxDropDownHeight" Value="260" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton Name="ToggleButton"
+                                          ClickMode="Press"
+                                          Focusable="False"
+                                          IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          Style="{StaticResource ComboToggleButtonStyle}">
+                                <ContentPresenter Content="{TemplateBinding SelectionBoxItem}"
+                                                  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                  ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}" />
+                            </ToggleButton>
+                            <Popup Name="Popup"
+                                   Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True"
+                                   Focusable="False"
+                                   PopupAnimation="Slide">
+                                <Border Background="{DynamicResource SurfaceBackgroundBrush}"
+                                        BorderBrush="{DynamicResource ControlBorderBrush}"
+                                        BorderThickness="1"
+                                        Width="{Binding PlacementTarget.ActualWidth, RelativeSource={RelativeSource AncestorType=Popup}}"
+                                        MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <ScrollViewer Margin="2" SnapsToDevicePixels="True">
+                                        <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBackgroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+            <Setter Property="Padding" Value="6,2" />
+            <Style.Triggers>
+                <Trigger Property="IsHighlighted" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
+                    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ControlBackgroundBrush}" />
+                    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="ListBox">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBackgroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
+        </Style>
+
+        <Style x:Key="WrappedListBoxStyle" TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+            <Setter Property="Padding" Value="4" />
+            <Setter Property="MinHeight" Value="90" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" TextWrapping="Wrap" TextTrimming="None" />
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PanelScrollViewerStyle" TargetType="ScrollViewer">
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+            <Setter Property="CanContentScroll" Value="False" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+
+        <Style TargetType="GroupBox">
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,0,0,10" />
+        </Style>
+
+        <Style TargetType="GridSplitter">
+            <Setter Property="Background" Value="{DynamicResource ControlBorderBrush}" />
+            <Setter Property="ShowsPreview" Value="True" />
+        </Style>
+
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBackgroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}" />
+            <Setter Property="GridLinesVisibility" Value="Horizontal" />
+            <Setter Property="CanUserAddRows" Value="False" />
+            <Setter Property="CanUserDeleteRows" Value="False" />
+            <Setter Property="HeadersVisibility" Value="Column" />
+            <Setter Property="RowHeaderWidth" Value="0" />
+            <Setter Property="AlternatingRowBackground" Value="{DynamicResource ControlBackgroundBrush}" />
+            <Setter Property="RowBackground" Value="{DynamicResource SurfaceBackgroundBrush}" />
+            <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource ControlBorderBrush}" />
+            <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource ControlBorderBrush}" />
+            <Setter Property="ColumnHeaderStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
+                        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+                        <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}" />
+                        <Setter Property="BorderThickness" Value="0,0,1,1" />
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="CellStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+                        <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}" />
+                        <Setter Property="BorderThickness" Value="0,0,1,1" />
+                        <Setter Property="Padding" Value="4,2" />
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SectionRowStyle" TargetType="DataGridRow">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding HasSignal}" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ControlBackgroundBrush}" />
+                    <Setter Property="FontWeight" Value="SemiBold" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="TabControl">
+            <Setter Property="Background" Value="{DynamicResource AppBackgroundBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}" />
+        </Style>
+
+        <Style TargetType="TabItem">
+            <Setter Property="Background" Value="{DynamicResource ControlBackgroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="8,4" />
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
+                    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid Name="RootGrid" Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Image Name="ThemeBackgroundImage"
+               Grid.RowSpan="4"
+               Source="Assets/malvex_foto.png"
+               Stretch="UniformToFill"
+               Opacity="0.08"
+               IsHitTestVisible="False"
+               Margin="-20" />
+
+        <Border Background="{DynamicResource PanelBackgroundBrush}" CornerRadius="10" Padding="12" Margin="0,0,0,10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <DockPanel LastChildFill="True">
+                    <Border DockPanel.Dock="Right"
+                            Background="{DynamicResource ControlBackgroundBrush}"
+                            CornerRadius="12"
+                            Padding="10,4"
+                            Margin="12,4,0,0">
+                        <TextBlock Text="TRIAGE ESTATICO PE" Foreground="{DynamicResource AccentBrush}" FontWeight="Bold" />
+                    </Border>
+                    <StackPanel>
+                        <TextBlock Text="MALVEX" FontSize="34" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,2" />
+                        <TextBlock Text="Analisis PE guiado, heuristicas, YARA y exploracion estatica" FontSize="16" Foreground="{DynamicResource TextMutedBrush}" TextWrapping="Wrap" />
+                    </StackPanel>
+                </DockPanel>
+
+                <WrapPanel Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,10,0,0">
+                    <TextBlock Text="Tema:" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <ComboBox Name="ThemeComboBox"
+                              Width="150"
+                              Background="{DynamicResource ControlBackgroundBrush}"
+                              Foreground="{DynamicResource TextPrimaryBrush}"
+                              SelectedIndex="0"
+                              SelectionChanged="ThemeComboBox_SelectionChanged">
+                        <ComboBoxItem Content="Cyber Neon" />
+                        <ComboBoxItem Content="Ocean Steel" />
+                        <ComboBoxItem Content="Sunset Terminal" />
+                        <ComboBoxItem Content="Clean Light" />
+                    </ComboBox>
+
+                    <Button Name="AnalyzeButton" Content="Abrir PE y analizar" Style="{StaticResource PrimaryButtonStyle}" Click="AnalyzeButton_Click" Margin="12,0,0,0" />
+                    <Button Name="ExportJsonButton" Content="Exportar JSON" Click="ExportJsonButton_Click" IsEnabled="False" />
+                    <Button Name="ExportHtmlButton" Content="Exportar HTML" Click="ExportHtmlButton_Click" IsEnabled="False" />
+                    <Button Name="CopySummaryTopButton" Content="Copiar resumen" Click="CopySummaryButton_Click" IsEnabled="False" />
+                    <Button Name="OpenReportsButton" Content="Abrir reportes" Click="OpenReportsButton_Click" />
+                </WrapPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Background="{DynamicResource PanelBackgroundBrush}" CornerRadius="8" Padding="9" Margin="0,0,0,10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1.1*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Name="FileInfoText" Grid.Row="0" Grid.Column="0" Text="Sin archivo cargado" Foreground="{DynamicResource TextMutedBrush}" TextTrimming="CharacterEllipsis" ToolTipOpening="StatusBlock_ToolTipOpening" />
+                <TextBlock Name="ArchInfoText" Grid.Row="0" Grid.Column="1" Text="Arquitectura: -" Foreground="{DynamicResource TextMutedBrush}" TextTrimming="CharacterEllipsis" ToolTipOpening="StatusBlock_ToolTipOpening" />
+                <TextBlock Name="HashInfoText" Grid.Row="0" Grid.Column="2" Text="SHA256: -" Foreground="{DynamicResource TextMutedBrush}" TextTrimming="CharacterEllipsis" ToolTipOpening="StatusBlock_ToolTipOpening" />
+                <TextBlock Name="RiskInfoText" Grid.Row="0" Grid.Column="3" Text="Riesgo: -" Foreground="{DynamicResource TextMutedBrush}" TextTrimming="CharacterEllipsis" ToolTipOpening="StatusBlock_ToolTipOpening" />
+                <TextBlock Name="StatusText" Grid.Row="1" Grid.ColumnSpan="4" Margin="0,6,0,0" Text="Estado: esperando analisis" Foreground="{DynamicResource TextMutedBrush}" TextWrapping="Wrap" ToolTipOpening="StatusBlock_ToolTipOpening" />
+            </Grid>
+        </Border>
+
+        <TabControl Grid.Row="2" Name="MainTabControl">
+            <TabItem Header="Resumen">
+                <ScrollViewer x:Name="SummaryScrollViewer"
+                              Style="{StaticResource PanelScrollViewerStyle}"
+                              HorizontalScrollBarVisibility="Disabled">
+                <Grid Margin="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" MinWidth="320" />
+                        <ColumnDefinition Width="8" />
+                        <ColumnDefinition Width="1*" MinWidth="320" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <GroupBox Grid.Row="0" Grid.ColumnSpan="3" Header="Ficha PE" MinHeight="58">
+                        <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="10,7">
+                            <TextBlock Name="StaticMetadataText"
+                                       Text="Carga un ejecutable PE para consultar sus metadatos principales."
+                                       Foreground="{DynamicResource TextMutedBrush}"
+                                       TextWrapping="Wrap" />
+                        </Border>
+                    </GroupBox>
+
+                    <GridSplitter Grid.Column="1"
+                                  Grid.Row="2"
+                                  Grid.RowSpan="3"
+                                  Width="8"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Stretch"
+                                  ResizeDirection="Columns"
+                                  ResizeBehavior="PreviousAndNext" />
+
+                    <Grid Grid.Row="2" Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="12" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <GroupBox Header="Secciones + Entropia" MinHeight="240">
+                            <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="6">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="6" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Name="SectionSignalsText"
+                                               Text="Secciones sin señales destacadas."
+                                               TextWrapping="Wrap"
+                                               Foreground="{DynamicResource TextMutedBrush}" />
+                                    <DataGrid Grid.Row="2" Name="SectionsGrid" AutoGenerateColumns="False" IsReadOnly="True" Height="210" RowStyle="{StaticResource SectionRowStyle}">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Nombre" Binding="{Binding Name}" Width="95" />
+                                            <DataGridTextColumn Header="VirtAddr" Binding="{Binding VirtualAddress, StringFormat=0x{0:X8}}" Width="115" />
+                                            <DataGridTextColumn Header="RawSize" Binding="{Binding RawSize}" Width="90" />
+                                            <DataGridTextColumn Header="Entropia" Binding="{Binding Entropy}" Width="85" />
+                                            <DataGridTextColumn Header="Flags" Binding="{Binding Characteristics}" Width="115" />
+                                            <DataGridTextColumn Header="Bandera" Binding="{Binding Signal}" Width="*" />
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Grid>
+                            </Border>
+                        </GroupBox>
+
+                        <GroupBox Grid.Row="2" Header="Imports / Exports" MinHeight="260">
+                            <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="8">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="100" />
+                                        <RowDefinition Height="8" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="100" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Imports" Foreground="{DynamicResource AccentBrush}" FontWeight="Bold" />
+                                    <ListBox Grid.Row="1" Name="ImportsList" Style="{StaticResource WrappedListBoxStyle}" />
+                                    <TextBlock Grid.Row="3" Text="Exports" Foreground="{DynamicResource AccentBrush}" FontWeight="Bold" />
+                                    <ListBox Grid.Row="4" Name="ExportsList" Style="{StaticResource WrappedListBoxStyle}" />
+                                </Grid>
+                            </Border>
+                        </GroupBox>
+                    </Grid>
+
+                    <Grid Grid.Row="2" Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="12" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="12" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <GroupBox Header="Hallazgos Heuristicos" MinHeight="240">
+                            <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="8">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="210" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Filtro:" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                    <ComboBox Grid.Row="0" Grid.Column="1" Name="FindingsFilterComboBox" Width="220" HorizontalAlignment="Left" MaxDropDownHeight="220" SelectedIndex="0" SelectionChanged="FindingsFilterComboBox_SelectionChanged">
+                                        <ComboBoxItem Content="Todos" />
+                                        <ComboBoxItem Content="Criticos" />
+                                        <ComboBoxItem Content="Advertencias" />
+                                        <ComboBoxItem Content="Info" />
+                                        <ComboBoxItem Content="Inyeccion" />
+                                        <ComboBoxItem Content="Red" />
+                                        <ComboBoxItem Content="Persistencia" />
+                                        <ComboBoxItem Content="Anti-debug" />
+                                    </ComboBox>
+                                    <ListBox Grid.Row="1" Grid.ColumnSpan="2" Name="FindingsList" Margin="0,8,0,0"
+                                             ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                             ScrollViewer.CanContentScroll="False">
+                                        <ListBox.ItemContainerStyle>
+                                            <Style TargetType="ListBoxItem">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                            </Style>
+                                        </ListBox.ItemContainerStyle>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding}" TextWrapping="Wrap" TextTrimming="None" />
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </Grid>
+                            </Border>
+                        </GroupBox>
+
+                        <GroupBox Grid.Row="2" Header="Coincidencias YARA" MinHeight="110">
+                            <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="8">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="8" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Name="YaraContextText"
+                                               Text="YARA sin contexto cargado."
+                                               TextWrapping="Wrap"
+                                               Foreground="{DynamicResource TextMutedBrush}" />
+                                    <ListBox Grid.Row="2" Name="YaraList" Style="{StaticResource WrappedListBoxStyle}" />
+                                </Grid>
+                            </Border>
+                        </GroupBox>
+
+                        <GroupBox Grid.Row="4" Header="Analisis Guiado" MinHeight="150">
+                            <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="8">
+                                <ListBox Name="GuidedList" Style="{StaticResource WrappedListBoxStyle}" />
+                            </Border>
+                        </GroupBox>
+                    </Grid>
+
+                    <GroupBox Grid.Row="4" Grid.Column="0" Header="Cadenas (Top)" MinHeight="240">
+                        <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="8">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="6" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <DockPanel>
+                                    <TextBlock Text="Buscar:" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                    <TextBox Name="StringsFilterTextBox"
+                                             TextChanged="StringsFilterTextBox_TextChanged"
+                                             ToolTip="Filtra las cadenas extraidas por texto"
+                                             VerticalContentAlignment="Center" />
+                                </DockPanel>
+                                <ListBox Grid.Row="2" Name="StringsList" Height="180" />
+                            </Grid>
+                        </Border>
+                    </GroupBox>
+
+                    <GroupBox Grid.Row="4" Grid.Column="2" Header="Vista Rapida de Hallazgos" MinHeight="240">
+                        <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="8">
+                            <ListBox Name="RiskReasonsListSummary" Style="{StaticResource WrappedListBoxStyle}" Height="210" />
+                        </Border>
+                    </GroupBox>
+                </Grid>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="Metadatos PE">
+                <ScrollViewer Style="{StaticResource PanelScrollViewerStyle}"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <Grid Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" MinWidth="300" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="1*" MinWidth="300" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="8" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="8" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <GroupBox Header="Identidad y Huellas">
+                            <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="8">
+                                <ListBox Name="AdvancedIdentityList" Style="{StaticResource WrappedListBoxStyle}" MinHeight="150" />
+                            </Border>
+                        </GroupBox>
+
+                        <GroupBox Grid.Column="2" Header="Firma Authenticode">
+                            <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="8">
+                                <ListBox Name="AuthenticodeDetailsList" Style="{StaticResource WrappedListBoxStyle}" MinHeight="150" />
+                            </Border>
+                        </GroupBox>
+
+                        <GroupBox Grid.Row="2" Header="Callbacks TLS">
+                            <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="8">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <ListBox Name="TlsCallbacksList" Style="{StaticResource WrappedListBoxStyle}" MinHeight="120" />
+                                    <WrapPanel Grid.Row="1" Margin="0,8,0,0">
+                                        <Button Name="TlsToHexButton"
+                                                Content="Ir a Hex"
+                                                Click="TlsToHexButton_Click"
+                                                IsEnabled="False"
+                                                Margin="0" />
+                                        <Button Name="TlsDisassembleButton"
+                                                Content="Desensamblar callback"
+                                                Click="TlsDisassembleButton_Click"
+                                                IsEnabled="False" />
+                                    </WrapPanel>
+                                </Grid>
+                            </Border>
+                        </GroupBox>
+
+                        <GroupBox Grid.Row="2" Grid.Column="2" Header="Recursos PE">
+                            <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="8">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <ListBox Name="ResourceTypesList" Style="{StaticResource WrappedListBoxStyle}" MinHeight="120" />
+                                    <Button Grid.Row="1"
+                                            Name="ResourceToHexButton"
+                                            Content="Ver recurso en Hex"
+                                            Click="ResourceToHexButton_Click"
+                                            IsEnabled="False"
+                                            HorizontalAlignment="Left"
+                                            Margin="0,8,0,0" />
+                                </Grid>
+                            </Border>
+                        </GroupBox>
+
+                        <GroupBox Grid.Row="4" Grid.ColumnSpan="3" Header="Version y Depuracion">
+                            <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="8">
+                                <ListBox Name="VersionMetadataList" Style="{StaticResource WrappedListBoxStyle}" MinHeight="130" />
+                            </Border>
+                        </GroupBox>
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Name="DisassemblyTabItem" Header="Desensamblado">
+                <Grid Margin="10">
+                    <DataGrid Name="DisassemblyGrid" AutoGenerateColumns="False" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="#" Binding="{Binding Index}" Width="70" />
+                            <DataGridTextColumn Header="RVA" Binding="{Binding Rva, StringFormat=0x{0:X8}}" Width="130" />
+                            <DataGridTextColumn Header="Bytes" Binding="{Binding Bytes}" Width="220" />
+                            <DataGridTextColumn Header="Mnemonic" Binding="{Binding Mnemonic}" Width="130" />
+                            <DataGridTextColumn Header="Operands" Binding="{Binding Operands}" Width="*" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="CFG Basico">
+                <Grid Margin="10">
+                    <DataGrid Name="CfgGrid" AutoGenerateColumns="False" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Nodo" Binding="{Binding Id}" Width="90" />
+                            <DataGridTextColumn Header="RVA Inicio" Binding="{Binding StartRva, StringFormat=0x{0:X8}}" Width="170" />
+                            <DataGridTextColumn Header="RVA Final" Binding="{Binding EndRva, StringFormat=0x{0:X8}}" Width="170" />
+                            <DataGridTextColumn Header="Sucesores" Binding="{Binding SuccessorsText}" Width="*" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Analista Asistido">
+                <ScrollViewer Style="{StaticResource PanelScrollViewerStyle}">
+                <Grid Margin="8" MinWidth="840" MinHeight="680">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" MinWidth="280" />
+                        <ColumnDefinition Width="6" />
+                        <ColumnDefinition Width="1*" MinWidth="280" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.8*" MinHeight="150" />
+                        <RowDefinition Height="6" />
+                        <RowDefinition Height="1*" MinHeight="220" />
+                        <RowDefinition Height="6" />
+                        <RowDefinition Height="0.8*" MinHeight="180" />
+                    </Grid.RowDefinitions>
+
+                    <GroupBox Grid.Column="0" Header="Triage Rapido (30 s)" MinHeight="140">
+                        <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="10">
+                            <ListBox Name="QuickTriageList" Style="{StaticResource WrappedListBoxStyle}" />
+                        </Border>
+                    </GroupBox>
+
+                    <GroupBox Grid.Column="2" Header="Linea de Tiempo Guiada" MinHeight="140">
+                        <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="10">
+                            <ListBox Name="TimelineList" Style="{StaticResource WrappedListBoxStyle}" />
+                        </Border>
+                    </GroupBox>
+
+                    <GridSplitter Grid.Column="1" Grid.RowSpan="5"
+                                  Width="6"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Stretch"
+                                  ResizeDirection="Columns"
+                                  ResizeBehavior="PreviousAndNext" />
+
+                    <GridSplitter Grid.Row="1" Grid.ColumnSpan="3"
+                                  Height="6"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Center"
+                                  ResizeDirection="Rows"
+                                  ResizeBehavior="PreviousAndNext" />
+
+                    <Grid Grid.Row="2" Grid.Column="0" Margin="0,0,12,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" MinHeight="120" />
+                            <RowDefinition Height="6" />
+                            <RowDefinition Height="*" MinHeight="110" />
+                        </Grid.RowDefinitions>
+                        <GroupBox Header="Hipotesis Automaticas" MinHeight="120">
+                            <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="8">
+                                <ListBox Name="HypothesesList" Style="{StaticResource WrappedListBoxStyle}" />
+                            </Border>
+                        </GroupBox>
+                        <GridSplitter Grid.Row="1"
+                                      Height="6"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Center"
+                                      ResizeDirection="Rows"
+                                      ResizeBehavior="PreviousAndNext" />
+                        <GroupBox Grid.Row="2" Header="Lista de Verificacion" MinHeight="110">
+                            <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="8">
+                                <ListBox Name="ChecklistList" Style="{StaticResource WrappedListBoxStyle}" />
+                            </Border>
+                        </GroupBox>
+                    </Grid>
+
+                    <Grid Grid.Row="2" Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1.2*" MinHeight="120" />
+                            <RowDefinition Height="6" />
+                            <RowDefinition Height="0.8*" MinHeight="110" />
+                        </Grid.RowDefinitions>
+                        <GroupBox Header="Acciones Sugeridas" MinHeight="120">
+                            <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="8">
+                                <ListBox Name="SuggestedActionsList" Style="{StaticResource WrappedListBoxStyle}" />
+                            </Border>
+                        </GroupBox>
+                        <GridSplitter Grid.Row="1"
+                                      Height="6"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Center"
+                                      ResizeDirection="Rows"
+                                      ResizeBehavior="PreviousAndNext" />
+                        <GroupBox Grid.Row="2" Header="Razones del Puntaje" MinHeight="110">
+                            <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="8">
+                                <ListBox Name="RiskReasonsList" Style="{StaticResource WrappedListBoxStyle}" />
+                            </Border>
+                        </GroupBox>
+                    </Grid>
+
+                    <GridSplitter Grid.Row="3" Grid.ColumnSpan="3"
+                                  Height="6"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Center"
+                                  ResizeDirection="Rows"
+                                  ResizeBehavior="PreviousAndNext" />
+
+                    <GroupBox Grid.Row="4" Grid.ColumnSpan="3" Header="Resumen Ejecutivo" MinHeight="160">
+                        <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="8">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <TextBox Name="ExecutiveSummaryTextBox"
+                                         IsReadOnly="True"
+                                         TextWrapping="Wrap"
+                                         AcceptsReturn="True"
+                                         VerticalScrollBarVisibility="Auto"
+                                         HorizontalScrollBarVisibility="Disabled"
+                                         Background="{DynamicResource SurfaceBackgroundBrush}"
+                                         Foreground="{DynamicResource TextPrimaryBrush}" />
+                                <Button Grid.Row="1"
+                                        Name="CopySummaryButton"
+                                        Content="Copiar resumen al portapapeles"
+                                        Click="CopySummaryButton_Click"
+                                        HorizontalAlignment="Left"
+                                        Margin="0,8,0,0" />
+                            </Grid>
+                        </Border>
+                    </GroupBox>
+                </Grid>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Name="HexTabItem" Header="Vista Hex">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="10" Margin="0,0,0,10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="220" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="RVA (hex):" VerticalAlignment="Center" Margin="0,0,8,0" />
+                            <TextBox Grid.Column="1" Name="HexRvaTextBox" VerticalContentAlignment="Center" ToolTip="Ej: 0x401000" />
+                            <Button Grid.Column="2" Name="LoadHexButton" Content="Cargar bytes" Click="LoadHexButton_Click" Margin="12,0,0,0" />
+                        </Grid>
+                    </Border>
+                    <GroupBox Grid.Row="1" Header="Volcado Hexadecimal (offset + bytes + ASCII)">
+                        <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="8">
+                            <TextBox Name="HexDumpTextBox"
+                                     IsReadOnly="True"
+                                     TextWrapping="NoWrap"
+                                     AcceptsReturn="True"
+                                     VerticalScrollBarVisibility="Auto"
+                                     HorizontalScrollBarVisibility="Auto"
+                                     FontFamily="Consolas"
+                                     FontSize="14"
+                                     Background="{DynamicResource SurfaceBackgroundBrush}"
+                                     Foreground="{DynamicResource TextPrimaryBrush}" />
+                        </Border>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Tutorial">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="280" />
+                        <ColumnDefinition Width="8" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <GroupBox Header="Secciones del Tutorial" Margin="0,0,12,0">
+                        <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="8">
+                            <ListBox Name="TutorialSectionList" SelectionChanged="TutorialSectionList_SelectionChanged" />
+                        </Border>
+                    </GroupBox>
+
+                    <GridSplitter Grid.Column="1"
+                                  Width="8"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Stretch"
+                                  ResizeDirection="Columns"
+                                  ResizeBehavior="PreviousAndNext" />
+
+                    <Grid Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1.1*" />
+                            <RowDefinition Height="0.9*" />
+                        </Grid.RowDefinitions>
+
+                        <GroupBox Header="Contenido">
+                            <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="8">
+                                <TextBox Name="TutorialContentTextBox"
+                                         IsReadOnly="True"
+                                         TextWrapping="Wrap"
+                                         AcceptsReturn="True"
+                                         VerticalScrollBarVisibility="Auto"
+                                         HorizontalScrollBarVisibility="Disabled"
+                                         Background="{DynamicResource SurfaceBackgroundBrush}"
+                                         Foreground="{DynamicResource TextPrimaryBrush}"
+                                         BorderThickness="0" />
+                            </Border>
+                        </GroupBox>
+
+                        <GroupBox Grid.Row="1" Header="Guia Rapida">
+                            <Border Background="{DynamicResource SurfaceBackgroundBrush}" CornerRadius="8" Padding="8">
+                                <ListBox Name="TutorialQuickStartList" />
+                            </Border>
+                        </GroupBox>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+
+        <TextBlock Grid.Row="3"
+                   Text="Malvex - Creado por Franco Nahuel Corbisiero"
+                   Foreground="{DynamicResource TextMutedBrush}"
+                   HorizontalAlignment="Right"
+                   Margin="0,10,4,0" />
+    </Grid>
+</Window>

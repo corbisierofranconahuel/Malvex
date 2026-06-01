@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Malvex.Core\Malvex.Core.csproj" />
+    <ProjectReference Include="..\Malvex.Analysis\Malvex.Analysis.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\malvex_foto.png" />
+    <Resource Include="Assets\malvex_foto.ico" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Assets\malvex_foto.ico</ApplicationIcon>
+    <Version>1.1.0</Version>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+  </PropertyGroup>
+
+</Project>

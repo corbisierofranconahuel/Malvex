@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+  <Package
+    Name="Malvex"
+    Manufacturer="Franco Nahuel Corbisiero"
+    Version="1.1.0"
+    Language="3082"
+    UpgradeCode="B52A31A2-5B2D-4ACD-A62D-3D38CF9D7A8A"
+    InstallerVersion="500"
+    Scope="perMachine">
+
+    <MajorUpgrade DowngradeErrorMessage="Ya hay una version mas nueva de Malvex instalada." />
+    <MediaTemplate EmbedCab="yes" />
+    <Icon Id="MalvexIcon" SourceFile="..\Malvex.App\Assets\malvex_foto.ico" />
+    <Property Id="ARPPRODUCTICON" Value="MalvexIcon" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <Property Id="ARPCONTACT" Value="Franco Nahuel Corbisiero" />
+    <WixVariable Id="WixUIBannerBmp" Value="Assets\banner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="Assets\dialog.bmp" />
+    <WixVariable Id="WixUILicenseRtf" Value="Assets\License.rtf" />
+    <ui:WixUI Id="WixUI_InstallDir" />
+
+    <Feature Id="MainFeature" Title="Malvex" Level="1">
+      <ComponentGroupRef Id="AppFiles" />
+    </Feature>
+  </Package>
+
+  <Fragment>
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="Malvex">
+        <Directory Id="DocsDir" Name="docs">
+          <Directory Id="DocsLicensesDir" Name="licenses" />
+        </Directory>
+        <Directory Id="RulesDir" Name="rules">
+          <Directory Id="RulesBaseDir" Name="base" />
+        </Directory>
+        <Directory Id="ToolsDir" Name="tools">
+          <Directory Id="YaraDir" Name="yara" />
+        </Directory>
+      </Directory>
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ProgramMenuDir" Name="Malvex" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="DesktopFolder">
+      <Component Id="CmpDesktopShortcut" Guid="*">
+        <Shortcut
+          Id="DesktopShortcutId"
+          Name="Malvex"
+          Target="[INSTALLFOLDER]Malvex.App.exe"
+          WorkingDirectory="INSTALLFOLDER"
+          Description="Malvex Guided PE Analysis"
+          Icon="MalvexIcon" />
+        <RegistryValue Root="HKCU" Key="Software\Malvex" Name="DesktopShortcut" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </StandardDirectory>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="INSTALLFOLDER">
+      <Component Id="CmpMainExe" Guid="*">
+        <File Source="$(var.PublishDir)\Malvex.App.exe" />
+      </Component>
+      <Component Id="CmpQuickStart" Guid="*">
+        <File Source="$(var.PublishDir)\QUICKSTART.txt" />
+      </Component>
+      <Component Id="CmpReadme" Guid="*">
+        <File Source="$(var.PublishDir)\README.md" />
+      </Component>
+      <Component Id="CmpRunCmd" Guid="*">
+        <File Source="$(var.PublishDir)\Run-Malvex.cmd" />
+      </Component>
+      <Component Id="CmpLicense" Guid="*">
+        <File Source="$(var.PublishDir)\LICENSE" />
+      </Component>
+      <Component Id="CmpNotice" Guid="*">
+        <File Source="$(var.PublishDir)\NOTICE" />
+      </Component>
+      <Component Id="CmpThirdParty" Guid="*">
+        <File Source="$(var.PublishDir)\THIRD_PARTY_NOTICES.md" />
+      </Component>
+      <Component Id="CmpSecurity" Guid="*">
+        <File Source="$(var.PublishDir)\SECURITY.md" />
+      </Component>
+      <Component Id="CmpPrivacy" Guid="*">
+        <File Source="$(var.PublishDir)\PRIVACY.md" />
+      </Component>
+      <Component Id="CmpChangelog" Guid="*">
+        <File Source="$(var.PublishDir)\CHANGELOG.md" />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="DocsDir">
+      <Component Id="CmpTutorial" Guid="*">
+        <File Source="$(var.PublishDir)\docs\TUTORIAL.md" />
+      </Component>
+      <Component Id="CmpReleaseChecklist" Guid="*">
+        <File Source="$(var.PublishDir)\docs\RELEASE_CHECKLIST.md" />
+      </Component>
+      <Component Id="CmpPublicationGuide" Guid="*">
+        <File Source="$(var.PublishDir)\docs\PUBLICATION_GUIDE.md" />
+      </Component>
+      <Component Id="CmpReleaseNotes" Guid="*">
+        <File Source="$(var.PublishDir)\docs\RELEASE_NOTES_v1.1.0.md" />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="DocsLicensesDir">
+      <Component Id="CmpIcedLicense" Guid="*">
+        <File Source="$(var.PublishDir)\docs\licenses\ICED-MIT.txt" />
+      </Component>
+      <Component Id="CmpYaraLicense" Guid="*">
+        <File Source="$(var.PublishDir)\docs\licenses\YARA-BSD-3-Clause.txt" />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="RulesBaseDir">
+      <Component Id="CmpYaraBaseRules" Guid="*">
+        <File Source="$(var.PublishDir)\rules\base\malvex_base_rules.yar" />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="YaraDir">
+      <Component Id="CmpYaraExe" Guid="*">
+        <File Source="$(var.PublishDir)\tools\yara\yara64.exe" />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="ProgramMenuDir">
+      <Component Id="CmpStartMenuShortcut" Guid="*">
+        <Shortcut
+          Id="StartMenuShortcutId"
+          Name="Malvex"
+          Target="[INSTALLFOLDER]Malvex.App.exe"
+          WorkingDirectory="INSTALLFOLDER"
+          Description="Malvex Guided PE Analysis"
+          Icon="MalvexIcon" />
+        <RegistryValue Root="HKCU" Key="Software\Malvex" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+
+      <Component Id="CmpProgramMenuCleanup" Guid="*">
+        <RemoveFolder Id="ProgramMenuDirRemove" On="uninstall" />
+        <RegistryValue Root="HKCU" Key="Software\Malvex" Name="StartMenuEntry" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="AppFiles">
+      <ComponentRef Id="CmpMainExe" />
+      <ComponentRef Id="CmpQuickStart" />
+      <ComponentRef Id="CmpReadme" />
+      <ComponentRef Id="CmpRunCmd" />
+      <ComponentRef Id="CmpLicense" />
+      <ComponentRef Id="CmpNotice" />
+      <ComponentRef Id="CmpThirdParty" />
+      <ComponentRef Id="CmpSecurity" />
+      <ComponentRef Id="CmpPrivacy" />
+      <ComponentRef Id="CmpChangelog" />
+      <ComponentRef Id="CmpTutorial" />
+      <ComponentRef Id="CmpReleaseChecklist" />
+      <ComponentRef Id="CmpPublicationGuide" />
+      <ComponentRef Id="CmpReleaseNotes" />
+      <ComponentRef Id="CmpIcedLicense" />
+      <ComponentRef Id="CmpYaraLicense" />
+      <ComponentRef Id="CmpYaraBaseRules" />
+      <ComponentRef Id="CmpYaraExe" />
+      <ComponentRef Id="CmpStartMenuShortcut" />
+      <ComponentRef Id="CmpDesktopShortcut" />
+      <ComponentRef Id="CmpProgramMenuCleanup" />
+    </ComponentGroup>
+  </Fragment>
+</Wix>

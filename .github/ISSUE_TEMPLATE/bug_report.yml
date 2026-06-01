@@ -1,0 +1,37 @@
+name: Reporte de error
+description: Reporta un problema reproducible de Malvex
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Version de Malvex
+      placeholder: "1.1.0"
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema
+      description: Explica el comportamiento observado y el esperado.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para reproducirlo
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Entorno
+      description: Version de Windows, VM o host, paquete portable o MSI.
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Seguridad
+      options:
+        - label: Quite datos confidenciales y no adjunte muestras de malware.
+          required: true

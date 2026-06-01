@@ -1,0 +1,20 @@
+name: Solicitud de mejora
+description: Sugiere una mejora de analisis estatico o usabilidad
+title: "[Mejora] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: Necesidad del analista
+      description: Explica el problema del flujo de trabajo antes de proponer una solucion.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Mejora propuesta
+  - type: textarea
+    id: tradeoffs
+    attributes:
+      label: Impacto en falsos positivos o UX
