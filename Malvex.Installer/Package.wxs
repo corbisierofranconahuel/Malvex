@@ -30,6 +30,7 @@
       <Directory Id="INSTALLFOLDER" Name="Malvex">
         <Directory Id="DocsDir" Name="docs">
           <Directory Id="DocsLicensesDir" Name="licenses" />
+          <Directory Id="DocsWazuhDir" Name="wazuh" />
         </Directory>
         <Directory Id="RulesDir" Name="rules">
           <Directory Id="RulesBaseDir" Name="base" />
@@ -122,6 +123,21 @@
       </Component>
     </DirectoryRef>
 
+    <DirectoryRef Id="DocsWazuhDir">
+      <Component Id="CmpWazuhArCmd" Guid="*">
+        <File Source="$(var.PublishDir)\docs\wazuh\malvex-wazuh-ar.cmd" />
+      </Component>
+      <Component Id="CmpWazuhArPs1" Guid="*">
+        <File Source="$(var.PublishDir)\docs\wazuh\malvex-wazuh-ar.ps1" />
+      </Component>
+      <Component Id="CmpWazuhDecoder" Guid="*">
+        <File Source="$(var.PublishDir)\docs\wazuh\malvex_decoder.xml" />
+      </Component>
+      <Component Id="CmpWazuhRules" Guid="*">
+        <File Source="$(var.PublishDir)\docs\wazuh\malvex_rules.xml" />
+      </Component>
+    </DirectoryRef>
+
     <DirectoryRef Id="RulesBaseDir">
       <Component Id="CmpYaraBaseRules" Guid="*">
         <File Source="$(var.PublishDir)\rules\base\malvex_base_rules.yar" />
@@ -174,6 +190,10 @@
       <ComponentRef Id="CmpReleaseNotes" />
       <ComponentRef Id="CmpIcedLicense" />
       <ComponentRef Id="CmpYaraLicense" />
+      <ComponentRef Id="CmpWazuhArCmd" />
+      <ComponentRef Id="CmpWazuhArPs1" />
+      <ComponentRef Id="CmpWazuhDecoder" />
+      <ComponentRef Id="CmpWazuhRules" />
       <ComponentRef Id="CmpYaraBaseRules" />
       <ComponentRef Id="CmpYaraExe" />
       <ComponentRef Id="CmpStartMenuShortcut" />

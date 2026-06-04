@@ -67,6 +67,83 @@ verdict + confidence + risk_score + evidencias
 5. El wrapper ejecuta `Malvex.Cli.exe analyze <ruta> --wazuh`.
 6. El resultado se escribe en log para que Wazuh lo procese con reglas propias.
 
+## Wrapper Active Response incluido
+
+Este repositorio incluye:
+
+```text
+docs\wazuh\malvex-wazuh-ar.cmd
+docs\wazuh\malvex-wazuh-ar.ps1
+docs\wazuh\malvex_decoder.xml
+docs\wazuh\malvex_rules.xml
+```
+
+En un agente Windows, copia `malvex-wazuh-ar.cmd` y `malvex-wazuh-ar.ps1` en:
+
+```text
+C:\Program Files (x86)\ossec-agent\active-response\bin\
+```
+
+El wrapper:
+
+- lee el evento Wazuh desde `STDIN`;
+- busca una ruta PE en campos comunes de FIM/syscheck;
+- valida que el archivo exista;
+- ejecuta `Malvex.Cli.exe analyze <archivo> --wazuh`;
+- escribe una linea `malvex_ar status=completed ...` en el log de Active Response.
+
+Prueba manual con evento simulado:
+
+```powershell
+$event = @{
+  parameters = @{
+    alert = @{
+      syscheck = @{
+        path = "C:\Windows\System32\notepad.exe"
+      }
+    }
+  }
+} | ConvertTo-Json -Depth 8
+
+$event | powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\docs\wazuh\malvex-wazuh-ar.ps1 -MalvexCliPath ".\dist\Malvex-win-x64-portable\Malvex.Cli.exe" -LogPath ".\reports\wazuh-test.log"
+Get-Content .\reports\wazuh-test.log
+```
+
+Ejemplo de linea esperada:
+
+```text
+malvex_ar status=completed exit_code=0 malvex verdict=low_risk confidence=0.08 score=8 ...
+```
+
+En el manager Wazuh, adapta/copiar:
+
+- `docs\wazuh\malvex_decoder.xml` a `/var/ossec/etc/decoders/local_decoder.xml`;
+- `docs\wazuh\malvex_rules.xml` a `/var/ossec/etc/rules/local_rules.xml`.
+
+Luego reinicia el manager Wazuh para cargar decoder y reglas.
+
+## Ejemplo conceptual de Active Response
+
+En el manager Wazuh, el comando puede declararse de forma similar a:
+
+```xml
+<command>
+  <name>malvex-analyze</name>
+  <executable>malvex-wazuh-ar.cmd</executable>
+  <timeout_allowed>no</timeout_allowed>
+</command>
+
+<active-response>
+  <disabled>no</disabled>
+  <command>malvex-analyze</command>
+  <location>local</location>
+  <rules_group>syscheck</rules_group>
+</active-response>
+```
+
+Recomendacion: primero probarlo en laboratorio con rutas controladas antes de
+activarlo para todos los endpoints.
+
 ## Ejemplo conceptual de regla Wazuh
 
 ```xml

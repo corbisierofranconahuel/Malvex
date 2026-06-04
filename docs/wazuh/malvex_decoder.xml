@@ -1,0 +1,10 @@
+<!--
+  Ejemplo de decoder para resultados escritos por malvex-wazuh-ar.ps1.
+  Copiar/adaptar en el manager Wazuh dentro de:
+    /var/ossec/etc/decoders/local_decoder.xml
+-->
+<decoder name="malvex-ar">
+  <prematch>malvex_ar status=completed</prematch>
+  <regex>verdict=(\S+) confidence=([0-9.]+) score=(\d+) risk_level=(\S+) is_pe=(\S+) sha256=([A-Fa-f0-9]{64})</regex>
+  <order>malvex.verdict,malvex.confidence,malvex.score,malvex.risk_level,malvex.is_pe,malvex.sha256</order>
+</decoder>

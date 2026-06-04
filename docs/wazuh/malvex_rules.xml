@@ -1,0 +1,29 @@
+<!--
+  Ejemplo de reglas para resultados Malvex.
+  Copiar/adaptar en el manager Wazuh dentro de:
+    /var/ossec/etc/rules/local_rules.xml
+-->
+<group name="malvex,malware,windows,">
+  <rule id="100500" level="3">
+    <decoded_as>malvex-ar</decoded_as>
+    <description>Malvex analizo un archivo PE</description>
+  </rule>
+
+  <rule id="100501" level="5">
+    <if_sid>100500</if_sid>
+    <field name="malvex.verdict">low_risk</field>
+    <description>Malvex marco un PE como bajo riesgo</description>
+  </rule>
+
+  <rule id="100502" level="10">
+    <if_sid>100500</if_sid>
+    <field name="malvex.verdict">suspicious</field>
+    <description>Malvex marco un PE como sospechoso</description>
+  </rule>
+
+  <rule id="100503" level="12">
+    <if_sid>100500</if_sid>
+    <field name="malvex.verdict">likely_malicious</field>
+    <description>Malvex marco un PE como probablemente malicioso</description>
+  </rule>
+</group>
