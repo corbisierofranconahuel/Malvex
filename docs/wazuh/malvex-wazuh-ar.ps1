@@ -37,6 +37,11 @@ function Resolve-DefaultLogPath {
 
 function Write-MalvexLog([string]$Message) {
     $timestamp = (Get-Date).ToUniversalTime().ToString("o")
+    $logDirectory = Split-Path $script:ResolvedLogPath -Parent
+    if (-not [string]::IsNullOrWhiteSpace($logDirectory)) {
+        New-Item -ItemType Directory -Force $logDirectory | Out-Null
+    }
+
     Add-Content -LiteralPath $script:ResolvedLogPath -Encoding UTF8 -Value "[$timestamp] $Message"
 }
 
