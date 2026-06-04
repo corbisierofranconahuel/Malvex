@@ -63,6 +63,9 @@
       <Component Id="CmpMainExe" Guid="*">
         <File Source="$(var.PublishDir)\Malvex.App.exe" />
       </Component>
+      <Component Id="CmpCliExe" Guid="*">
+        <File Source="$(var.PublishDir)\Malvex.Cli.exe" />
+      </Component>
       <Component Id="CmpQuickStart" Guid="*">
         <File Source="$(var.PublishDir)\QUICKSTART.txt" />
       </Component>
@@ -101,6 +104,9 @@
       </Component>
       <Component Id="CmpPublicationGuide" Guid="*">
         <File Source="$(var.PublishDir)\docs\PUBLICATION_GUIDE.md" />
+      </Component>
+      <Component Id="CmpWazuhIntegration" Guid="*">
+        <File Source="$(var.PublishDir)\docs\WAZUH_INTEGRATION.md" />
       </Component>
       <Component Id="CmpReleaseNotes" Guid="*">
         <File Source="$(var.PublishDir)\docs\RELEASE_NOTES_v1.1.0.md" />
@@ -151,6 +157,7 @@
   <Fragment>
     <ComponentGroup Id="AppFiles">
       <ComponentRef Id="CmpMainExe" />
+      <ComponentRef Id="CmpCliExe" />
       <ComponentRef Id="CmpQuickStart" />
       <ComponentRef Id="CmpReadme" />
       <ComponentRef Id="CmpRunCmd" />
@@ -163,6 +170,7 @@
       <ComponentRef Id="CmpTutorial" />
       <ComponentRef Id="CmpReleaseChecklist" />
       <ComponentRef Id="CmpPublicationGuide" />
+      <ComponentRef Id="CmpWazuhIntegration" />
       <ComponentRef Id="CmpReleaseNotes" />
       <ComponentRef Id="CmpIcedLicense" />
       <ComponentRef Id="CmpYaraLicense" />

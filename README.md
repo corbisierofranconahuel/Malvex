@@ -103,6 +103,7 @@ su objetivo es acelerar y documentar el triage estatico inicial.
 - Vista Hex por RVA
 - Pestaña `Metadatos PE` para identidad, firma, TLS navegable, recursos con salto a Hex, version y PDB
 - Busqueda inmediata dentro de cadenas extraidas
+- CLI `Malvex.Cli.exe` para automatizacion, SIEM y pipelines defensivos
 - Analisis guiado paso a paso
 - Capa `Analista Asistido`:
   - Hipotesis automaticas
@@ -134,6 +135,16 @@ Malvex directamente desde el codigo fuente:
 dotnet build .\Malvex.sln
 dotnet run --project .\Malvex.App\Malvex.App.csproj
 ```
+
+## CLI para automatizacion
+
+```powershell
+dotnet run --project .\Malvex.Cli\Malvex.Cli.csproj -- analyze "C:\Ruta\archivo.exe" --json --pretty
+dotnet run --project .\Malvex.Cli\Malvex.Cli.csproj -- analyze "C:\Ruta\archivo.exe" --wazuh
+```
+
+La CLI devuelve `verdict`, `confidence`, `risk_score`, hallazgos, YARA y resumen
+del archivo. Consulta [Integracion con Wazuh](docs/WAZUH_INTEGRATION.md).
 
 ## Compilar release
 
@@ -211,6 +222,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\sign-release.ps1 -PfxPath "C:
 - [Tutorial](docs/TUTORIAL.md)
 - [Checklist de release](docs/RELEASE_CHECKLIST.md)
 - [Guia de publicacion en GitHub](docs/PUBLICATION_GUIDE.md)
+- [Integracion con Wazuh](docs/WAZUH_INTEGRATION.md)
 - [Guia de contribuciones](CONTRIBUTING.md)
 
 ## Roadmap resumido

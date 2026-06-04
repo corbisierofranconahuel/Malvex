@@ -2,6 +2,19 @@
 
 Los cambios relevantes de Malvex se documentan aqui.
 
+## [Unreleased]
+
+### Agregado
+
+- Proyecto `Malvex.Cli` para automatizacion, SIEM y pipelines defensivos.
+- Salida JSON estable con `verdict`, `confidence`, `risk_score`, YARA,
+  hallazgos, secciones destacadas y acciones sugeridas.
+- Salida compacta `--wazuh` para integracion inicial con Wazuh o reglas simples.
+- Codigos de salida para automatizacion: OK, alerta, error tecnico, no PE y
+  argumentos invalidos.
+- Guia `docs/WAZUH_INTEGRATION.md`.
+- Paquetes portable/MSI preparados para incluir `Malvex.Cli.exe`.
+
 ## [1.1.0] - 2026-06-01
 
 ### Agregado

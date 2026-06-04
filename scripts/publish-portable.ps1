@@ -7,11 +7,13 @@ $ErrorActionPreference = "Stop"
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $project = Join-Path $repoRoot "Malvex.App\Malvex.App.csproj"
+$cliProject = Join-Path $repoRoot "Malvex.Cli\Malvex.Cli.csproj"
 $distRoot = Join-Path $repoRoot "dist"
 $packageName = "Malvex-$Runtime-portable"
 $packageDir = Join-Path $distRoot $packageName
 $zipPath = Join-Path $distRoot "$packageName.zip"
 $tempPublish = Join-Path $repoRoot "Malvex.App\bin\$Configuration\net8.0-windows\$Runtime\publish"
+$cliTempPublish = Join-Path $repoRoot "Malvex.Cli\bin\$Configuration\net8.0\$Runtime\publish"
 
 function Assert-ChildPath([string]$Path, [string]$Parent) {
     $fullPath = [System.IO.Path]::GetFullPath($Path)
@@ -24,17 +26,22 @@ function Assert-ChildPath([string]$Path, [string]$Parent) {
 Write-Host "[1/5] Cleaning old package output..."
 Assert-ChildPath $packageDir $distRoot
 Assert-ChildPath $tempPublish (Join-Path $repoRoot "Malvex.App\bin")
+Assert-ChildPath $cliTempPublish (Join-Path $repoRoot "Malvex.Cli\bin")
 if (Test-Path $packageDir) { Remove-Item -LiteralPath $packageDir -Recurse -Force }
 if (Test-Path $zipPath) { Remove-Item -Force $zipPath }
 if (Test-Path $tempPublish) { Remove-Item -LiteralPath $tempPublish -Recurse -Force }
+if (Test-Path $cliTempPublish) { Remove-Item -LiteralPath $cliTempPublish -Recurse -Force }
 New-Item -ItemType Directory -Force $distRoot | Out-Null
 
-Write-Host "[2/5] Publishing self-contained single-file executable..."
+Write-Host "[2/5] Publishing self-contained single-file executables..."
 dotnet publish $project -c $Configuration -r $Runtime --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true -p:DebugType=None -p:DebugSymbols=false
 if ($LASTEXITCODE -ne 0) { throw "dotnet publish fallo con codigo $LASTEXITCODE." }
+dotnet publish $cliProject -c $Configuration -r $Runtime --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=None -p:DebugSymbols=false
+if ($LASTEXITCODE -ne 0) { throw "dotnet publish CLI fallo con codigo $LASTEXITCODE." }
 
 Write-Host "[3/5] Copying publish output and runtime assets..."
 Copy-Item -Recurse -Force $tempPublish $packageDir
+Copy-Item -Force (Join-Path $cliTempPublish "Malvex.Cli.exe") (Join-Path $packageDir "Malvex.Cli.exe")
 
 $rulesSource = Join-Path $repoRoot "rules"
 $toolsSource = Join-Path $repoRoot "tools"
@@ -99,7 +106,9 @@ Paquete portable de Malvex
 2) Ejecuta Run-Malvex.cmd o $mainExe
 3) Si SmartScreen bloquea: click en 'Mas informacion' -> 'Ejecutar de todas formas'
 4) Para YARA, esta carpeta ya incluye rules/ y tools/yara/
-5) Si YARA no esta disponible en una VM limpia, instala Microsoft Visual C++ Redistributable x64
+5) Para automatizacion/SIEM ejecuta: Malvex.Cli.exe analyze "C:\ruta\archivo.exe" --json
+6) Para Wazuh o logs compactos ejecuta: Malvex.Cli.exe analyze "C:\ruta\archivo.exe" --wazuh
+7) Si YARA no esta disponible en una VM limpia, instala Microsoft Visual C++ Redistributable x64
 
 Creado por Franco Nahuel Corbisiero
 "@ | Set-Content -Encoding UTF8 $quickStartPath

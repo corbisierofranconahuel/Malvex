@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Malvex.Analysis", "Malvex.A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Malvex.Tests", "Malvex.Tests\Malvex.Tests.csproj", "{78F716F8-C28C-460D-95BA-1303B4EC1183}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Malvex.Cli", "Malvex.Cli\Malvex.Cli.csproj", "{B68E59F9-D6D8-430A-AF53-3FC28B822FDF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{78F716F8-C28C-460D-95BA-1303B4EC1183}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78F716F8-C28C-460D-95BA-1303B4EC1183}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78F716F8-C28C-460D-95BA-1303B4EC1183}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B68E59F9-D6D8-430A-AF53-3FC28B822FDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B68E59F9-D6D8-430A-AF53-3FC28B822FDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B68E59F9-D6D8-430A-AF53-3FC28B822FDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B68E59F9-D6D8-430A-AF53-3FC28B822FDF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

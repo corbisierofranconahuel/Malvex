@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Malvex.Analysis\Malvex.Analysis.csproj" />
+    <ProjectReference Include="..\Malvex.Cli\Malvex.Cli.csproj" />
   </ItemGroup>
 
 </Project>
